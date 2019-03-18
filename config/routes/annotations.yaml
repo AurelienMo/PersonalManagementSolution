@@ -1,0 +1,4 @@
+controllers:
+    resource: ../../src/Actions/API
+    type: annotation
+    prefix: /api
