@@ -22,3 +22,5 @@ behat.yml
 ###< behat/symfony2-extension ###
 .deptrac.cache
 .idea/
+.vagrant
+ubuntu-xenial*
