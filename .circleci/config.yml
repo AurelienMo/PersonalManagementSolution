@@ -19,12 +19,6 @@ jobs:
                   name: Install PHP zip
                   command: sudo docker-php-ext-install zip
             - run:
-                  name: Install npm package
-                  command: yarn install
-            - run:
-                  name: Generate manifest file
-                  command: yarn run watch
-            - run:
                   name: Check Coding Style
                   command: vendor/bin/phpcs
             - run:
