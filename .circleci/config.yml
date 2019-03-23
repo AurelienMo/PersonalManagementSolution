@@ -3,7 +3,6 @@ jobs:
     checker:
         docker:
             - image: circleci/php:7.2-fpm
-            - image: circleci/node:8-browsers
         steps:
             - checkout
             - run: sudo php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
@@ -21,7 +20,10 @@ jobs:
                   command: sudo docker-php-ext-install zip
             - run:
                   name: Install npm package
-                  command: npm install
+                  command: yarn install
+            - run:
+                  name: Generate manifest file
+                  command: yarn run watch
             - run:
                   name: Check Coding Style
                   command: vendor/bin/phpcs
