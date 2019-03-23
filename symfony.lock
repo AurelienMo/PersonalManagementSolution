@@ -124,9 +124,6 @@
     "egulias/email-validator": {
         "version": "2.1.7"
     },
-    "exsyst/swagger": {
-        "version": "v0.4.1"
-    },
     "gesdinet/jwt-refresh-token-bundle": {
         "version": "v0.5.4"
     },
@@ -156,19 +153,6 @@
     },
     "namshi/jose": {
         "version": "7.2.3"
-    },
-    "nelmio/api-doc-bundle": {
-        "version": "3.0",
-        "recipe": {
-            "repo": "github.com/symfony/recipes-contrib",
-            "branch": "master",
-            "version": "3.0",
-            "ref": "c8e0c38e1a280ab9e37587a8fa32b251d5bc1c94"
-        },
-        "files": [
-            "config/packages/nelmio_api_doc.yaml",
-            "config/routes/nelmio_api_doc.yaml"
-        ]
     },
     "nelmio/cors-bundle": {
         "version": "1.5",
@@ -275,6 +259,9 @@
     "swiftmailer/swiftmailer": {
         "version": "v6.2.0"
     },
+    "symfony/asset": {
+        "version": "v4.2.4"
+    },
     "symfony/browser-kit": {
         "version": "v4.2.4"
     },
@@ -368,9 +355,6 @@
         "version": "v4.2.4"
     },
     "symfony/inflector": {
-        "version": "v4.2.4"
-    },
-    "symfony/options-resolver": {
         "version": "v4.2.4"
     },
     "symfony/orm-pack": {
@@ -518,6 +502,23 @@
             "config/routes/dev/web_profiler.yaml"
         ]
     },
+    "symfony/webpack-encore-bundle": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "1b88cff897d383c45522a457ea9daba85a9b9ab2"
+        },
+        "files": [
+            "assets/css/app.css",
+            "assets/js/app.js",
+            "config/packages/assets.yaml",
+            "config/packages/webpack_encore.yaml",
+            "package.json",
+            "webpack.config.js"
+        ]
+    },
     "symfony/yaml": {
         "version": "v4.2.4"
     },
@@ -532,8 +533,5 @@
     },
     "zendframework/zend-eventmanager": {
         "version": "3.2.1"
-    },
-    "zircote/swagger-php": {
-        "version": "2.0.13"
     }
 }

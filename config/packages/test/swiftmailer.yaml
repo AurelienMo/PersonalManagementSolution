@@ -1,2 +1,5 @@
 swiftmailer:
+    spool:
+        type: file
     disable_delivery: true
+    delivery_addresses:

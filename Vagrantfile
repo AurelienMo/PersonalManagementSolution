@@ -8,7 +8,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision :shell, path: "bootstrap.sh"
 
   config.vm.synced_folder ".", "/var/www/html", type: "rsync",
-      rsync__exclude: [".idea", ".git/", "vendor/", "node_modules/", "var/cache", "public", "var/logs"]
+      rsync__exclude: [".idea", ".git/", "vendor/", "node_modules/", "var/cache", "public/bundles", "var/log"]
 
   config.vm.hostname = "personal-management-solution"
   config.vm.provider "virtualbox" do |vb|

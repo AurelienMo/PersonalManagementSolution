@@ -1,0 +1,108 @@
+swagger: "2.0"
+info:
+    description: This is a Personal Management Solution API to manage your daily
+    version: 1.0.0
+    title: Personal Management Solution
+    termsOfService: http://swagger.io/terms/
+    contact:
+        email: morvan.Aurelien@gmail.com
+servers:
+    - url: http://localhost:8004/api
+schemes:
+    - http
+    - https
+basePath: /api
+paths:
+    /login_check:
+        post:
+            tags:
+                - Account
+            summary: Authenticate to application
+            description: Allow anonymous user to get a token and access to different resources
+            produces:
+                - application/json
+            consumes:
+                - application/json
+            operationId: loginCheck
+            parameters:
+                - in: body
+                  name: body
+                  type: string
+                  required: true
+                  description: User credentials
+                  schema:
+                      $ref: '#/definitions/AuthenticationInput'
+            responses:
+                200:
+                    description: Successful authentication
+                    schema:
+                        $ref: '#/definitions/AuthenticationOutput'
+                401:
+                    description: Bad credentials
+                    schema:
+                        $ref: '#/definitions/ErrorJWTOutput'
+                400:
+                    description: Bad request
+definitions:
+    BadRequestOutput:
+        type: array
+        properties:
+            items:
+                type: array
+    ErrorJWTOutput:
+        type: object
+        properties:
+            code:
+                type: integer
+                description: Status code error
+            message:
+                type: string
+                description: Error authentication message
+    AuthenticationOutput:
+        type: object
+        properties:
+            token:
+                type: string
+                required: true
+                description: Authentication token
+            refresh_token:
+                type: string
+                required: true
+                description: Refresh token
+            user:
+                type: object
+                $ref: '#/definitions/UserInfoOutput'
+    UserInfoOutput:
+        type: object
+        properties:
+            id:
+                type: string
+                required: true
+            firstname:
+                type: string
+                required: true
+            lastname:
+                type: string
+                required: true
+            email:
+                type: string
+                required: true
+            username:
+                type: string
+                required: true
+            roles:
+                type: array
+                items:
+                    type: string
+                required: true
+    AuthenticationInput:
+        type: object
+        properties:
+            username:
+                type: string
+                required: true
+                description: Username or email
+            password:
+                type: string
+                required: true
+                description: Password to authenticate
