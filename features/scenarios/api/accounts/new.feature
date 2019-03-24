@@ -56,7 +56,7 @@ Feature: As an anonymous user, I need to be able to create an account
     And the JSON node "email" should exist
     And the JSON node "username" should exist
     And the JSON node "password" should exist
-    
+
   Scenario: [Fail] Invalid password too short
     When I send a "POST" request to "/api/accounts" with body:
     """
@@ -77,7 +77,7 @@ Feature: As an anonymous user, I need to be able to create an account
         ]
     }
     """
-    
+
   Scenario: [Success] Successful create account
     When I send a "POST" request to "/api/accounts" with body:
     """
@@ -90,4 +90,6 @@ Feature: As an anonymous user, I need to be able to create an account
     }
     """
     Then the response status code should be 201
+    And user with username "foobar" should exist into database
+    And user with username "foobar" should have status "pending_validation"
     And 1 mails should have been sent

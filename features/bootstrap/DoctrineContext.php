@@ -151,4 +151,40 @@ class DoctrineContext implements Context
         $this->getManager()->flush();
     }
 
+    /**
+     * @Then user with username :username should exist into database
+     */
+    public function userWithUsernameShouldExistIntoDatabase($username)
+    {
+        $user = $this->getManager()->getRepository(User::class)
+                                   ->loadUserByUsername($username);
+
+        if (is_null($user)) {
+            throw new Exception(
+                sprintf(
+                    "User with username %s should exist",
+                    $username
+                )
+            );
+        }
+    }
+
+    /**
+     * @Then user with username :username should have status :status
+     */
+    public function userWithUsernameShouldHaveStatus($username, $status)
+    {
+        /** @var User $user */
+        $user = $this->getManager()->getRepository(User::class)
+            ->loadUserByUsername($username);
+
+        if ($user->getStatus() !== $status) {
+            throw new Exception(
+                sprintf(
+                    "User should have status '%s', '%s' status occured",
+                    $status,$user->getStatus()
+                )
+            );
+        }
+    }
 }
