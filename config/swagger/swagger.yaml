@@ -43,6 +43,7 @@ paths:
                         $ref: '#/definitions/ErrorJWTOutput'
                 400:
                     description: Bad request
+    /account
 definitions:
     BadRequestOutput:
         type: array
