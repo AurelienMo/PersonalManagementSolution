@@ -43,8 +43,54 @@ paths:
                         $ref: '#/definitions/ErrorJWTOutput'
                 400:
                     description: Bad request
+    /accounts:
+        post:
+            tags:
+                - Account
+            summary: User registration
+            description: Allow anonymous user to create a new account
+            produces:
+                - 'application/json'
+            consumes:
+                - 'application/json'
+            operationId: newAccount
+            parameters:
+                - in: body
+                  name: body
+                  required: true
+                  type: string
+                  description: Datas to create account
+                  schema:
+                      $ref: '#/definitions/NewAccountInput'
+            responses:
+                201:
+                    description: Successful create account
+                400:
+                    description: Bad request
+                403:
+                    description: Forbidden.
+                    schema:
+                        $ref: '#/definitions/ErrorJWTOutput'
 
 definitions:
+    NewAccountInput:
+        type: object
+        properties:
+            firstname:
+                type: string
+                required: true
+            lastname:
+                type: string
+                required: true
+            username:
+                type: string
+                required: true
+            email:
+                type: string
+                required: true
+            password:
+                type: string
+                required: true
     BadRequestOutput:
         type: array
         properties:
