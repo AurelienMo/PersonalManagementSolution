@@ -11,7 +11,9 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
+use App\Entity\User;
 use Behat\Behat\Context\Context;
+use Behat\Gherkin\Node\TableNode;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -127,4 +129,26 @@ class DoctrineContext implements Context
     {
         return $this->encoderFactory->getEncoder(User::class);
     }
+
+    /**
+     * @Given I load following users:
+     */
+    public function iLoadFollowingUsers(TableNode $table)
+    {
+        foreach ($table->getHash() as $hash) {
+            $user = new User(
+                $hash['firstname'],
+                $hash['lastname'],
+                $hash['username'],
+                $this->getEncoder()->encodePassword($hash['password'], ''),
+                $hash['email'],
+                $hash['tokenActivation'],
+                $hash['status']
+            );
+            $this->getManager()->persist($user);
+        }
+
+        $this->getManager()->flush();
+    }
+
 }

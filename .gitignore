@@ -8,10 +8,6 @@
 /vendor/
 ###< symfony/framework-bundle ###
 
-###> lexik/jwt-authentication-bundle ###
-/config/jwt/*.pem
-###< lexik/jwt-authentication-bundle ###
-
 ###> squizlabs/php_codesniffer ###
 /.phpcs-cache
 /phpcs.xml
@@ -32,3 +28,4 @@ npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
 public/.htaccess
+.env.test
