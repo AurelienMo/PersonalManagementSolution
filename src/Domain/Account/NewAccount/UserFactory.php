@@ -39,8 +39,7 @@ class UserFactory
         string $password,
         string $email,
         string $tokenActivation
-    ): User
-    {
+    ): User {
         return new User(
             $firstname,
             $lastname,
