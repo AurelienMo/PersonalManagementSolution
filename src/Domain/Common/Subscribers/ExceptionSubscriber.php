@@ -50,6 +50,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
     private function processValidatorException(GetResponseForExceptionEvent $event, ValidatorException $exception)
     {
+        /** @var string $datas */
         $datas = json_encode($exception->getErrors());
         $event
             ->setResponse(
@@ -59,6 +60,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
     private function processHttpException(GetResponseForExceptionEvent $event, HttpException $exception)
     {
+        /** @var string $datas */
         $datas = json_encode(
             [
                 'code' => $exception->getStatusCode(),

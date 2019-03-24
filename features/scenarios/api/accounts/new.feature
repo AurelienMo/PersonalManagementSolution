@@ -91,5 +91,5 @@ Feature: As an anonymous user, I need to be able to create an account
     """
     Then the response status code should be 201
     And user with username "foobar" should exist into database
-    And user with username "foobar" should have status "pending_validation"
+    And user with username "foobar" should have status "pending_activation"
     And 1 mails should have been sent
