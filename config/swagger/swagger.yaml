@@ -13,6 +13,9 @@ schemes:
     - https
 basePath: /api
 paths:
+    #############################################
+    ################# ACCOUNTS ##################
+    #############################################
     /login_check:
         post:
             tags:
@@ -71,8 +74,48 @@ paths:
                     description: Forbidden.
                     schema:
                         $ref: '#/definitions/ErrorJWTOutput'
+    /accounts/activate:
+        post:
+            tags:
+                - Account
+            summary: Confirm registration
+            description: Allow user to confirm registration and eenable account
+            produces:
+                - 'application/json'
+            consumes:
+                - 'application/json'
+            operationId: activateAccount
+            parameters:
+                - in: body
+                  name: body
+                  required: true
+                  type: string
+                  description: Datas to activate account
+                  schema:
+                      $ref: '#/definitions/ConfirmAccountInput'
+            responses:
+                201:
+                    description: Successful activate account
+                    schema:
+                        $ref: '#/definitions/AuthenticationOutput'
+                400:
+                    description: Bad request
+                403:
+                    description: Forbidden
+                    schema:
+                        $ref: '#/definitions/ErrorJWTOutput'
+
 
 definitions:
+    ConfirmAccountInput:
+        type: object
+        properties:
+            token:
+                type: string
+                required: true
+            email:
+                type: string
+                required: true
     NewAccountInput:
         type: object
         properties:
