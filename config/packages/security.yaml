@@ -1,11 +1,11 @@
 security:
     encoders:
-        App\Entity\User:
+        App\Common\Entity\User:
             algorithm: bcrypt
     providers:
         user_provider:
             entity:
-                class: App\Entity\User
+                class: App\Common\Entity\User
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
@@ -19,7 +19,7 @@ security:
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
         public_account:
-            pattern: ^/api/accounts
+            pattern: ^/api/common/accounts
             anonymous: true
             guard:
                 authenticators:
@@ -37,5 +37,5 @@ security:
 
     access_control:
         - { path: ^/api/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/accounts, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - { path: ^/api/common/accounts, roles: IS_AUTHENTICATED_ANONYMOUSLY}
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }

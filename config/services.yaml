@@ -8,21 +8,21 @@ services:
 
     App\:
         resource: '../src/*'
-        exclude: '../src/{DependencyInjection,Entity,DoctrineMigrations,Tests,Kernel.php}'
+        exclude: '../src/{DependencyInjection,Common/Entity,Globals/DoctrineMigrations,Tests,Kernel.php}'
 
-    App\Actions\:
-        resource: '../src/Actions'
+    App\Common\Actions\:
+        resource: '../src/Common/Actions'
         tags: ['controller.service_arguments']
 
-    App\Domain\Account\Authentication\Listeners\AuthenticationFailureListener:
+    App\Common\Domain\Account\Authentication\Listeners\AuthenticationFailureListener:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onAuthenticationFailureResponse}
 
-    App\Domain\Account\Authentication\Listeners\AuthenticationSuccessListener:
+    App\Common\Domain\Account\Authentication\Listeners\AuthenticationSuccessListener:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccess}
 
-    App\Domain\Account\Authentication\Listeners\AuthenticationTokenNotFoundListener:
+    App\Common\Domain\Account\Authentication\Listeners\AuthenticationTokenNotFoundListener:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_jwt_not_found, method: onJWTNotFound}
 

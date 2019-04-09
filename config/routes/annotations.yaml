@@ -1,10 +1,10 @@
-api:
-    resource: ../../src/Actions/API
+api_common:
+    resource: ../../src/Common/Actions/API
     type: annotation
-    prefix: /api
+    prefix: /api/common
 
-web:
-    resource: ../../src/Actions/Web
+web_common:
+    resource: ../../src/Common/Actions/Web
     type: annotation
 
 api_login_check:
