@@ -22,7 +22,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * Class User
  *
  * @ORM\Table(name="amo_user")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Common\Repository\UserRepository")
  */
 class User extends AbstractEntity implements UserInterface
 {
@@ -187,5 +187,11 @@ class User extends AbstractEntity implements UserInterface
     public function eraseCredentials()
     {
         return;
+    }
+
+    public function activate()
+    {
+        $this->status = UserStatus::STATUS_ENABLED;
+        $this->tokenActivation = null;
     }
 }

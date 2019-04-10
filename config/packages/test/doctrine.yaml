@@ -1,6 +1,8 @@
 doctrine:
     dbal:
-        # configure these for your database server
-        driver: 'pdo_sqlite'
-        url: '%env(resolve:DATABASE_URL_TEST)%'
-        memory: true
+        default_connection: common
+        connections:
+            common:
+                driver: 'pdo_sqlite'
+
+                url: '%env(resolve:DATABASE_URL_TEST_COMMON)%'

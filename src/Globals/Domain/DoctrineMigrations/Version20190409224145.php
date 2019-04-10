@@ -24,7 +24,9 @@ final class Version20190409224145 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
-        if ($this->connection->getDatabase() !== (explode('/', getenv('DATABASE_URL_COMMON')))[3]) {
+        /** @var string $databaseName */
+        $databaseName = getenv('DATABASE_URL_COMMON');
+        if ($this->connection->getDatabase() !== (explode('/', $databaseName))[3]) {
             return;
         }
 
@@ -36,7 +38,9 @@ final class Version20190409224145 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
-        if ($this->connection->getDatabase() !== (explode('/', getenv('DATABASE_URL_COMMON')))[3]) {
+        /** @var string $databaseName */
+        $databaseName = getenv('DATABASE_URL_COMMON');
+        if ($this->connection->getDatabase() !== (explode('/', $databaseName))[3]) {
             return;
         }
 
