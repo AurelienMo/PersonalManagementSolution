@@ -41,6 +41,7 @@ class Persister extends AbstractPersister
             $input->getEmail()
         );
 
+        /** @ */
         $this->getManager('common')->getRepository(User::class)
                                             ->persistSave($user, true);
 

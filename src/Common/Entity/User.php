@@ -93,7 +93,7 @@ class User extends AbstractEntity implements UserInterface
         string $username,
         string $password,
         string $email,
-        string $status = UserStatus::STATUS_PENDING_ACTIVATION
+        string $status = UserStatus::STATUS_ENABLED
     ) {
         $this->firstname = $firstname;
         $this->lastname = $lastname;
