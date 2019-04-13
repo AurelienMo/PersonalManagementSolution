@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace App\Common\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use App\Globals\Domain\Repository\AbstractRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * Class UserRepository
  */
-class UserRepository extends EntityRepository implements UserLoaderInterface
+class UserRepository extends AbstractRepository implements UserLoaderInterface
 {
     /**
      * @param string $username

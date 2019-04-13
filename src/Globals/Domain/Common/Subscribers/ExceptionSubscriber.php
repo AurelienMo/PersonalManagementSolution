@@ -54,7 +54,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
         $datas = json_encode($exception->getErrors());
         $event
             ->setResponse(
-                JsonResponder::response($datas, 400)
+                JsonResponder::response(null, $datas, 400)
             );
     }
 
@@ -69,7 +69,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
         );
         $event
             ->setResponse(
-                JsonResponder::response($datas, $exception->getStatusCode())
+                JsonResponder::response(null, $datas, $exception->getStatusCode())
             );
     }
 }

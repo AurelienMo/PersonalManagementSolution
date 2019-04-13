@@ -66,7 +66,6 @@ class CreateAccountCommand extends Command
         $this
             ->setName('app:create-user')
             ->setDescription('Allow to create user account from cli.');
-
     }
 
     /**
@@ -91,10 +90,8 @@ class CreateAccountCommand extends Command
             $fields['lastname'],
             $fields['username'],
             $this->getEncoder(User::class)->encodePassword($fields['password'], ''),
-            $fields['email'],
-            TokenGenerator::generate()
+            $fields['email']
         );
-        $user->activate();
 
         $this->registry->getManager('common')->persist($user);
         $this->registry->getManager('common')->flush();

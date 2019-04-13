@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace App\Globals\Responders;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -21,17 +22,17 @@ use Symfony\Component\HttpFoundation\Response;
 class JsonResponder
 {
     /**
+     * @param Request     $request
      * @param string|null $datas
      * @param int         $statusCode
-     * @param bool        $isCacheable
      * @param array       $additionalHeaders
      *
      * @return Response
      */
     public static function response(
+        ?Request $request,
         ?string $datas = null,
         int $statusCode = 200,
-        bool $isCacheable = false,
         array $additionalHeaders = []
     ): Response {
         $response = new Response(
@@ -45,7 +46,7 @@ class JsonResponder
             )
         );
 
-        if ($isCacheable) {
+        if (!\is_null($request) && $request->isMethodCacheable()) {
             $response->setPublic()
                      ->setSharedMaxAge(3600);
         }

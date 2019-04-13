@@ -55,13 +55,6 @@ class User extends AbstractEntity implements UserInterface
     protected $email;
 
     /**
-     * @var string|null
-     *
-     * @ORM\Column(type="string", nullable=true)
-     */
-    protected $tokenActivation;
-
-    /**
      * @var array
      *
      * @ORM\Column(type="array")
@@ -90,7 +83,6 @@ class User extends AbstractEntity implements UserInterface
      * @param string $username
      * @param string $password
      * @param string $email
-     * @param string $tokenActivation
      * @param string $status
      *
      * @throws \Exception
@@ -101,14 +93,12 @@ class User extends AbstractEntity implements UserInterface
         string $username,
         string $password,
         string $email,
-        string $tokenActivation,
         string $status = UserStatus::STATUS_PENDING_ACTIVATION
     ) {
         $this->firstname = $firstname;
         $this->lastname = $lastname;
         $this->username = $username;
         $this->email = $email;
-        $this->tokenActivation = $tokenActivation;
         $this->password = $password;
         $this->roles[] = 'ROLE_USER';
         $this->status = $status;
@@ -148,14 +138,6 @@ class User extends AbstractEntity implements UserInterface
     }
 
     /**
-     * @return string|null
-     */
-    public function getTokenActivation(): ?string
-    {
-        return $this->tokenActivation;
-    }
-
-    /**
      * @return array
      */
     public function getRoles(): array
@@ -187,11 +169,5 @@ class User extends AbstractEntity implements UserInterface
     public function eraseCredentials()
     {
         return;
-    }
-
-    public function activate()
-    {
-        $this->status = UserStatus::STATUS_ENABLED;
-        $this->tokenActivation = null;
     }
 }
