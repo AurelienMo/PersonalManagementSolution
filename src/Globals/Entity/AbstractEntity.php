@@ -15,6 +15,7 @@ namespace App\Globals\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Class AbstractEntity
@@ -26,6 +27,8 @@ abstract class AbstractEntity
      *
      * @ORM\Id
      * @ORM\Column(type="string")
+     *
+     * @Groups({"all"})
      */
     protected $id;
 
@@ -33,6 +36,8 @@ abstract class AbstractEntity
      * @var \DateTime
      *
      * @ORM\Column(type="datetime")
+     *
+     * @Groups({"all"})
      */
     protected $createdAt;
 
@@ -40,6 +45,8 @@ abstract class AbstractEntity
      * @var \DateTime|null
      *
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @Groups({"all"})
      */
     protected $updatedAt;
 

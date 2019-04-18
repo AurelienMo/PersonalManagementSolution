@@ -11,6 +11,11 @@ servers:
 schemes:
     - http
     - https
+securityDefinitions:
+    ApiKeyAuth:
+        type: apiKey
+        in: header
+        name: Authorization
 basePath: /api
 paths:
     #############################################
@@ -104,6 +109,30 @@ paths:
                     description: Forbidden
                     schema:
                         $ref: '#/definitions/ErrorJWTOutput'
+    /groups/{id}:
+        get:
+            tags:
+                - Group
+            summary: Detail group
+            security:
+                -   ApiKeyAuth: []
+            description: Allow user to obtain detail group information
+            produces:
+                - 'application/json'
+            consumes:
+                - 'application/json'
+            operationId: DetailGroup
+            parameters:
+                - in: path
+                  name: id
+                  type: string
+                  required: true
+                  description: Group id
+            responses:
+                200:
+                    description: Successful get full informations
+
+
 
 
 definitions:

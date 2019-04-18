@@ -17,6 +17,7 @@ use App\Common\Entity\AdditionnalInformationsEntities\UserStatus;
 use App\Globals\Entity\AbstractEntity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Class User
@@ -30,6 +31,8 @@ class User extends AbstractEntity implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string")
+     *
+     * @Groups({"group_detail_show"})
      */
     protected $firstname;
 
@@ -37,6 +40,8 @@ class User extends AbstractEntity implements UserInterface
      * @var string
      *
      * @ORM\Column(type="string")
+     *
+     * @Groups({"group_detail_show"})
      */
     protected $lastname;
 
@@ -74,6 +79,14 @@ class User extends AbstractEntity implements UserInterface
      * @ORM\Column(type="string")
      */
     protected $password;
+
+    /**
+     * @var Group|null
+     *
+     * @ORM\ManyToOne(targetEntity="Group", inversedBy="members")
+     * @ORM\JoinColumn(name="amo_group_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
+     */
+    protected $group;
 
     /**
      * User constructor.
@@ -169,5 +182,26 @@ class User extends AbstractEntity implements UserInterface
     public function eraseCredentials()
     {
         return;
+    }
+
+    /**
+     * @return Group|null
+     */
+    public function getGroup(): ?Group
+    {
+        return $this->group;
+    }
+
+    /**
+     * @param Group $group
+     */
+    public function defineGroup(?Group $group)
+    {
+        $this->group = $group;
+    }
+
+    public function updateRole(string $role)
+    {
+        $this->roles[] = $role;
     }
 }

@@ -18,12 +18,41 @@ use App\Common\Entity\User;
 use App\Globals\Domain\AbstractPersister;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
+use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * Class Persister
  */
 class Persister extends AbstractPersister
 {
+    /** @var EncoderFactoryInterface */
+    protected $encoder;
+
+    /**
+     * Persister constructor.
+     *
+     * @param RegistryInterface        $registry
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param SerializerInterface      $serializer
+     * @param EncoderFactoryInterface  $encoder
+     */
+    public function __construct(
+        RegistryInterface $registry,
+        EventDispatcherInterface $eventDispatcher,
+        SerializerInterface $serializer,
+        EncoderFactoryInterface $encoder
+    ) {
+        $this->encoder = $encoder;
+        parent::__construct(
+            $registry,
+            $eventDispatcher,
+            $serializer
+        );
+    }
+
     /**
      * @param NewAccountInput $input
      *
@@ -33,15 +62,15 @@ class Persister extends AbstractPersister
      */
     public function save(NewAccountInput $input)
     {
+        $encoder = $this->encoder->getEncoder(User::class);
         $user = UserFactory::create(
             $input->getFirstname(),
             $input->getLastname(),
             $input->getUsername(),
-            $input->getPassword(),
+            $encoder->encodePassword($input->getPassword(), ''),
             $input->getEmail()
         );
 
-        /** @ */
         $this->getManager('common')->getRepository(User::class)
                                             ->persistSave($user, true);
 

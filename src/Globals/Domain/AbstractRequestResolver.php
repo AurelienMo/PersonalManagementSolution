@@ -13,10 +13,12 @@ declare(strict_types=1);
 
 namespace App\Globals\Domain;
 
+use App\Common\Entity\User;
 use App\Globals\Domain\Common\Exceptions\ValidatorException;
 use App\Globals\Domain\Common\Factory\ValidatorErrorsFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -94,7 +96,7 @@ abstract class AbstractRequestResolver
         $reflectClass = new \ReflectionClass($this->getInputClass());
         $className = $reflectClass->name;
 
-        return $className();
+        return new $className();
     }
 
     /**
@@ -110,5 +112,16 @@ abstract class AbstractRequestResolver
                 ValidatorErrorsFactory::build($constraintList)
             );
         }
+    }
+
+    /**
+     * @return User|object|string
+     */
+    protected function getCurrentUser()
+    {
+        /** @var TokenInterface $token */
+        $token = $this->tokenStorage->getToken();
+
+        return $token->getUser();
     }
 }

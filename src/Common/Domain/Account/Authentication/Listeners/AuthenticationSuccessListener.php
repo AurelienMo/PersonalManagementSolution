@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace App\Common\Domain\Account\Authentication\Listeners;
 
+use App\Common\Entity\Group;
 use App\Common\Entity\User;
 use Lexik\Bundle\JWTAuthenticationBundle\Event\AuthenticationSuccessEvent;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -40,6 +41,12 @@ class AuthenticationSuccessListener
             'username' => $user->getUsername(),
             'roles' => $user->getRoles(),
         ];
+        if ($user->getGroup() instanceof Group) {
+            $data['user']['group'] = [
+                'id' => $user->getGroup()->getId(),
+                'name' => $user->getGroup()->getName(),
+            ];
+        }
 
         $event->setData($data);
     }
