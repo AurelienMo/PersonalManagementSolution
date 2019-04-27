@@ -1,114 +1,151 @@
-EXEC_APACHE        = sudo service apache2
 EXEC_PHP        = php
+EXEC_JS         = npm
 
 SYMFONY         = $(EXEC_PHP) bin/console
 COMPOSER        = composer
-NPM            = npm
+YARN            = $(EXEC_JS) npm
+
+ARTEFACTS = var/artefacts
 
 ##
 ## Project
 ## -------
 ##
 
-.DEFAULT_GOAL := help
 
-help: ## Default goal (display the help message)
-help:
-	@grep -E '(^[a-zA-Z_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-20s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
 
-.PHONY: help
 
 ##
-## Tools
-## ------
-##
-xdebugen: ## Enable Xdebug
-	sudo phpenmod xdebug
-	$(EXEC_APACHE) restart
-
-xdebugdis: ## Disable Xdebug
-	sudo phpdismod xdebug
-	$(EXEC_APACHE) restart
-
-cc: ## Clear the cache (by default, the dev env is used)
-cc: var/cache
-	$(SYMFONY) cache:clear --env=$(or $(ENV), dev)
-
-cw: ## Cache warmup (by default, the dev env is used)
-	$(SYMFONY) cache:warmup --env=$(or $(ENV), dev)
-
-cs: ## Run phpcs
-cs: vendor/bin/phpcs
-	vendor/bin/phpcs
-
-stan: ## Run phpstan
-stan: vendor/bin/phpstan
-	vendor/bin/phpstan analyze src
-
-cbf: ## Run PHPCBF
-cbf: vendor/bin/phpcbf
-	vendor/bin/phpcbf
-
-##
-## Manage Dependencies
-## ------
+## Utils
+## -----
 ##
 
-vendor: ## Install composer dependecies
-vendor: composer.lock
-	$(COMPOSER) install -n --prefer-dist
+db: ## Reset the database and load fixtures
+db: .env vendor
+	@$(EXEC_PHP) php -r 'echo "Wait database...\n"; set_time_limit(15); require __DIR__."/vendor/autoload.php"; (new \Symfony\Component\Dotenv\Dotenv())->load(__DIR__."/.env"); $$u = parse_url(getenv("DATABASE_URL")); for(;;) { if(@fsockopen($$u["host"].":".($$u["port"] ?? 3306))) { break; }}'
+	-$(SYMFONY) doctrine:database:drop --if-exists --force
+	-$(SYMFONY) doctrine:database:create --if-not-exists
+	$(SYMFONY) doctrine:migrations:migrate --no-interaction --allow-no-migration
 
-new-vendor: ## Require new dependency
-new-vendor: composer.json
-	$(COMPOSER) require $(DEP)
-
-new-dev-vendor: ## Require new dev dependency
-new-dev-vendor: composer.json
-	$(COMPOSER) require $(DEP) --dev
-
-remove-vendor: ## Remove dependency
-remove-vendor: composer.json
-	$(COMPOSER) require $(DEP) --dev
-
-node: ## Install npm depencies
-node: package.lock
-	$(NPM) install
-
-add-node: ##  Add package to dependencies
-add-node: package.json
-	$(NPM) install $(PACKAGE) --save
-
-dev-node: ## Add package to dev dependencies
-dev-node: package.json
-	$(NPM) install $(PACKAGE) --save-dev
-
-##
-## Database
-## ------
-##
-db-diff: ## Generate doctrine diff
-db-diff: src/Entity
+db-diff: ## Generate a new doctrine migration
+db-diff: vendor
 	$(SYMFONY) doctrine:migrations:diff
 
-db-migr: ## Execute migration
-db-migr: src/Domain/DoctrineMigrations
-	$(SYMFONY) doctrine:migrations:migrate -n
+db-migr: ## Apply migration doctrine
+db-migr: vendor
+	$(SYMFONY) doctrine:migrations:migrate
 
-db-down: ## Down migration
-db-down: src/Domain/DoctrineMigrations
-	$(SYMFONY) doctrine:migrations:exec --down $(VERSION) -n
+console: ## Execute command symfony
+console: vendor
+	$(SYMFONY) $* $(ARGS)
 
-db-up: ## Up migration
-db-up: src/Domain/DoctrineMigrations
-	$(SYMFONY) doctrine:migrations:exec --up $(VERSION) -n
+db-validate-schema: ## Validate the doctrine ORM mapping
+db-validate-schema: .env vendor
+	$(SYMFONY) doctrine:schema:validate
+
+assets: ## Run Webpack Encore to compile assets
+assets: node_modules
+	$(YARN) run dev
+
+watch: ## Run Webpack Encore in watch mode
+watch: node_modules
+	$(YARN) run watch
+
+.PHONY: db migration assets watch
 
 ##
-## TESTS
-## ------
+## Tests
+## -----
 ##
-tu: ## Run phpunit
-tu: tests
+
+test: ## Run unit and functional tests
+test: tu tf
+
+tu: ## Run unit tests
+tu: vendor
 	vendor/bin/phpunit
-tf: ## Run behat
-tf: features
+
+tf: ## Run functional tests
+tf: vendor
 	vendor/bin/behat
+
+.PHONY: test tu tf
+
+# rules based on files
+composer.lock: composer.json
+	$(COMPOSER) update --lock --no-scripts --no-interaction
+
+vendor: composer.lock
+	$(COMPOSER) install
+
+new-vendor:
+	$(COMPOSER) req $(ARGS)
+
+new-vendor-dev:
+	$(COMPOSER) req --dev $(ARGS)
+
+node_modules: yarn.lock
+	$(YARN) install
+	@touch -c node_modules
+
+yarn.lock: package.json
+	$(YARN) upgrade
+
+.env: .env
+	@if [ -f .env ]; \
+	then\
+		echo '\033[1;41m/!\ The .env file has changed. Please check your .env file (this message will not be displayed again).\033[0m';\
+		touch .env;\
+		exit 1;\
+	else\
+		echo cp .env .env.local;\
+		cp .env .env.local;\
+	fi
+
+
+##
+## Quality assurance
+## -----------------
+##
+
+lint: ## Lints twig and yaml files
+lint: lt ly
+
+lt: vendor
+	$(SYMFONY) lint:twig templates
+
+ly: vendor
+	$(SYMFONY) lint:yaml config
+
+phploc: ## PHPLoc (https://github.com/sebastianbergmann/phploc)
+	vendor/bin/phploc src/
+
+cs: ## PHP_CodeSnifer (https://github.com/squizlabs/PHP_CodeSniffer)
+	vendor/bin/phpcs -v
+
+
+phpmetrics: ## PhpMetrics (http://www.phpmetrics.org)
+phpmetrics: artefacts
+	vendor/bin/phpmetrics --report-html=$(ARTEFACTS)/phpmetrics src
+
+php-cs-fixer: ## php-cs-fixer (http://cs.sensiolabs.org)
+	vendor/bin/php-cs-fixer fix src --dry-run --using-cache=no --verbose --diff
+
+twigcs: ## twigcs (https://github.com/allocine/twigcs)
+	$(QA) twigcs lint templates
+
+eslint: ## eslint (https://eslint.org/)
+eslint: node_modules
+	$(EXEC_JS) node_modules/.bin/eslint --fix-dry-run assets/js/**
+
+artefacts:
+	mkdir -p $(ARTEFACTS)
+
+.PHONY: lint lt ly phploc pdepend phpmd php_codesnifer phpcpd phpdcd phpmetrics php-cs-fixer apply-php-cs-fixer artefacts
+
+
+
+.DEFAULT_GOAL := help
+help:
+	@grep -E '(^[a-zA-Z_-]+:.*?##.*$$)|(^##)' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[32m%-30s\033[0m %s\n", $$1, $$2}' | sed -e 's/\[32m##/[33m/'
+.PHONY: help

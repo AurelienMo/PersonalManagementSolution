@@ -1,5 +1,5 @@
 doctrine_migrations:
-    dir_name: '%kernel.project_dir%/src/Globals/Domain/DoctrineMigrations'
+    dir_name: '%kernel.project_dir%/src/Domain/DoctrineMigrations'
     # namespace is arbitrary but should be different from App\DoctrineMigrations
     # as migrations classes should NOT be autoloaded
-    namespace: App\Globals\Domain\DoctrineMigrations
+    namespace: App\Domain\DoctrineMigrations

@@ -1,11 +1,11 @@
 security:
     encoders:
-        App\Common\Entity\User:
+        App\Entity\User:
             algorithm: bcrypt
     providers:
         user_provider:
             entity:
-                class: App\Common\Entity\User
+                class: App\Entity\User
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
