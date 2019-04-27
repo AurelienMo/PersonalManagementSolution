@@ -41,12 +41,6 @@ class AuthenticationSuccessListener
             'username' => $user->getUsername(),
             'roles' => $user->getRoles(),
         ];
-        if ($user->getGroup() instanceof Group) {
-            $data['user']['group'] = [
-                'id' => $user->getGroup()->getId(),
-                'name' => $user->getGroup()->getName(),
-            ];
-        }
 
         $event->setData($data);
     }

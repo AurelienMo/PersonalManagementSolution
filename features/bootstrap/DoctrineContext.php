@@ -215,4 +215,31 @@ class DoctrineContext implements Context
         $this->getManager()->flush();
     }
 
+    /**
+     * @Given group with name :name should have id :id
+     *
+     * @param string $name
+     * @param string $id
+     *
+     * @throws ReflectionException
+     */
+    public function groupWithNameShouldHaveId(string $name, string $id)
+    {
+        $group = $this->getManager()->getRepository(Group::class)->findOneBy(['name' => $name]);
+        $this->setUuid($group, $id);
+        $this->getManager()->flush();
+    }
+
+    /**
+     * @Given user :username should have group with id :groupId
+     */
+    public function userShouldHaveGroupWithId($username, $groupId)
+    {
+        /** @var User $user */
+        $user = $this->getManager()->getRepository(User::class)->loadUserByUsername($username);
+        $user->defineGroup(
+            $this->getManager()->getRepository(Group::class)->find($groupId)
+        );
+        $this->getManager()->flush();
+    }
 }
