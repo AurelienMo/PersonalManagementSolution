@@ -199,8 +199,16 @@ class User extends AbstractEntity implements UserInterface
         $this->group = $group;
     }
 
-    public function updateRole(string $role)
+    /**
+     * @param string $role
+     * @param bool   $remove
+     */
+    public function updateRole(string $role, bool $remove = false)
     {
-        $this->roles[] = $role;
+        if ($remove) {
+            unset($this->roles[$role]);
+        } else {
+            $this->roles[] = $role;
+        }
     }
 }

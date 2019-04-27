@@ -242,4 +242,43 @@ class DoctrineContext implements Context
         );
         $this->getManager()->flush();
     }
+
+    /**
+     * @Given user with username :username should have following id :id
+     */
+    public function userWithUsernameShouldHaveFollowingId($username, $id)
+    {
+        $user = $this->getManager()->getRepository(User::class)->loadUserByUsername($username);
+        $this->setUuid($user, $id);
+        $this->getManager()->flush();
+    }
+
+    /**
+     * @Given user with username :username should have following group name :name
+     */
+    public function userWithUsernameShouldHaveFollowingGroupName($username, $name)
+    {
+        /** @var User $user */
+        $user = $this->getManager()->getRepository(User::class)->loadUserByUsername($username);
+        $group = $this->getManager()->getRepository(Group::class)->findOneBy(['name' => $name]);
+        $user->defineGroup($group);
+
+        $this->getManager()->flush();
+    }
+
+    /**
+     * @Given user with username :username should have following role:
+     */
+    public function userWithUsernameShouldHaveFollowingRole($username, TableNode $table)
+    {
+        /** @var User $user */
+        $user = $this->getManager()->getRepository(User::class)->loadUserByUsername($username);
+        foreach ($user->getRoles() as $role) {
+            $user->updateRole($role, true);
+        }
+        foreach ($table->getHash() as $hash) {
+            $user->updateRole($hash['role']);
+        }
+        $this->getManager()->flush();
+    }
 }
