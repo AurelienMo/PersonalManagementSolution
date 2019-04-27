@@ -12,10 +12,12 @@ declare(strict_types=1);
  */
 
 use App\Entity\AbstractEntity;
+use App\Entity\Group;
 use App\Entity\User;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
 use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\Tools\SchemaTool;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
@@ -188,4 +190,29 @@ class DoctrineContext implements Context
             );
         }
     }
+
+    /**
+     * @Given I load following group:
+     *
+     * @param TableNode $table
+     *
+     * @throws NonUniqueResultException
+     */
+    public function iLoadFollowingGroup(TableNode $table)
+    {
+        foreach ($table->getHash() as $hash) {
+            /** @var User $user */
+            $user = $this->getManager()->getRepository(User::class)->loadUserByUsername($hash['owner']);
+            $group = new Group(
+                $hash['name'],
+                $hash['passwordToJoin'],
+                $user
+            );
+            $this->getManager()->persist($group);
+            $user->defineGroup($group);
+        }
+
+        $this->getManager()->flush();
+    }
+
 }

@@ -27,7 +27,8 @@ class AuthenticationTokenNotFoundListener
             [
                 'code' => 401,
                 'message' => 'Jeton d\'identification non trouvé.',
-            ]
+            ],
+            401
         );
 
         $event->setResponse($response);
