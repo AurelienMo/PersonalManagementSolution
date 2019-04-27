@@ -32,7 +32,7 @@ jobs:
                   command: vendor/bin/behat
             -   run:
                   name: Valid unit tests
-                  command: bin/phpunit
+                  command: sudo bin/phpunit
 
 workflows:
     version: 2
