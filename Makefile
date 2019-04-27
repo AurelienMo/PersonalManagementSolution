@@ -123,6 +123,9 @@ phploc: ## PHPLoc (https://github.com/sebastianbergmann/phploc)
 cs: ## PHP_CodeSnifer (https://github.com/squizlabs/PHP_CodeSniffer)
 	vendor/bin/phpcs -v
 
+stan: ## PHPStan
+	vendor/bin/phpstan analyze src
+
 
 phpmetrics: ## PhpMetrics (http://www.phpmetrics.org)
 phpmetrics: artefacts

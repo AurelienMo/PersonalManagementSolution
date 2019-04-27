@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace App\Domain\Groups\Detail;
 
 use App\Entity\Group;
+use App\Repository\GroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -52,8 +53,9 @@ class Loader
      */
     public function load(DetailGroupInput $input)
     {
-        $group = $this->entityManager->getRepository(Group::class)
-                                     ->loadFullInformations($input->getGroup()->getId());
+        /** @var GroupRepository $repo */
+        $repo = $this->entityManager->getRepository(Group::class);
+        $group = $repo->loadFullInformations($input->getGroup()->getId());
 
         return $this->serializer->serialize(
             $group,

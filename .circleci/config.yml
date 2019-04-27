@@ -30,6 +30,9 @@ jobs:
             - run:
                   name: Valid functional tests
                   command: vendor/bin/behat
+            -   run:
+                  name: Valid unit tests
+                  command: bin/phpunit
 
 workflows:
     version: 2

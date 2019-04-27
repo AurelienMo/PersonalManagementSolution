@@ -36,9 +36,11 @@ class Persister extends AbstractPersister
      */
     public function save(NewGroupInput $input)
     {
+        /** @var string $passwordHashed */
+        $passwordHashed = password_hash($input->getPasswordToJoin(), PASSWORD_BCRYPT);
         $group = GroupFactory::create(
             $input->getName(),
-            password_hash($input->getPasswordToJoin(), PASSWORD_BCRYPT),
+            $passwordHashed,
             $input->getOwner()
         );
         $input->getOwner()->defineGroup($group);

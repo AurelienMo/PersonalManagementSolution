@@ -16,6 +16,7 @@ namespace App\Domain\Groups\Detail;
 use App\Entity\Group;
 use App\Domain\AbstractRequestResolver;
 use App\Domain\Common\Helpers\RequestExtractorParams;
+use App\Repository\GroupRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\HttpFoundation\Request;
@@ -70,8 +71,9 @@ class RequestResolver extends AbstractRequestResolver
     public function resolve(Request $request)
     {
         $groupId = RequestExtractorParams::extract($request, RequestExtractorParams::PATH, 'id');
-        $group = $this->entityManager->getRepository(Group::class)
-                                     ->getGroupById($groupId);
+        /** @var GroupRepository $repo */
+        $repo = $this->entityManager->getRepository(Group::class);
+        $group = $repo->getGroupById($groupId);
 
         if (\is_null($group)) {
             throw new HttpException(
