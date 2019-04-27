@@ -130,4 +130,10 @@ class Group extends AbstractEntity
     {
         return $this->members;
     }
+
+    public function removeMember(User $user)
+    {
+        $this->members->removeElement($user);
+        $user->defineGroup(null);
+    }
 }

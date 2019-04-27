@@ -1,4 +1,8 @@
 security:
+    role_hierarchy:
+        ROLE_MEMBER: ROLE_USER
+        ROLE_ADMIN: ROLE_MEMBER
+        ROLE_OWNER: ROLE_ADMIN
     encoders:
         App\Entity\User:
             algorithm: bcrypt

@@ -23,6 +23,21 @@ Feature: As an auth & owner group user I need to able to remove member from my g
     When I send a "DELETE" request to "/api/groups/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/members/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
     Then the response status code should be 401
 
+  Scenario: [Fail] Invalid group
+    When After authentication on url "/api/login_check" with method "POST" as user "test" with password "12345678", I send a "DELETE" request to "/api/groups/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab/members/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab" with body:
+    """
+    """
+    Then the response status code should be 404
+    And the JSON node "message" should be equal to "Ce groupe n'existe pas."
+
+  Scenario: [Fail] Invalid group
+    And group with name "Foob" should have id "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+    When After authentication on url "/api/login_check" with method "POST" as user "foobar" with password "12345678", I send a "DELETE" request to "/api/groups/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/members/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaab" with body:
+    """
+    """
+    Then the response status code should be 404
+    And the JSON node "message" should be equal to "Ce membre n'existe pas."
+
   Scenario: [Fail] Unauthorized remove member to other group
     And group with name "Foob" should have id "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
     And user with username "barfoo" should have following group name "Foob"
@@ -52,14 +67,13 @@ Feature: As an auth & owner group user I need to able to remove member from my g
 
   Scenario: [Success] Remove member with owner
     And group with name "Foob" should have id "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
+    And user with username "foobar" should have following group name "Foob"
+    And user with username "foobar" should have following role:
+      | role              |
+      | ROLE_MEMBER       |
+      | ROLE_OWNER        |
     And user with username "barfoo" should have following group name "Foob"
     And user with username "johndoe" should have following group name "Foob"
-    And user with username "test" should have following group name "Foob"
-    And user with username "test" should have following role:
-      | role              |
-      | 'ROLE_MEMBER'     |
-      | 'ROLE_ADMIN'      |
-      | 'ROLE_USER'       |
     And user with username "barfoo" should have following id "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
     When After authentication on url "/api/login_check" with method "POST" as user "foobar" with password "12345678", I send a "DELETE" request to "/api/groups/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/members/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa" with body:
     """
@@ -72,10 +86,9 @@ Feature: As an auth & owner group user I need to able to remove member from my g
     And user with username "johndoe" should have following group name "Foob"
     And user with username "test" should have following group name "Foob"
     And user with username "test" should have following role:
-      | role              |
-      | 'ROLE_MEMBER'     |
-      | 'ROLE_ADMIN'      |
-      | 'ROLE_USER'       |
+      | role            |
+      | ROLE_MEMBER     |
+      | ROLE_ADMIN      |
     And user with username "barfoo" should have following id "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
     When After authentication on url "/api/login_check" with method "POST" as user "test" with password "12345678", I send a "DELETE" request to "/api/groups/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/members/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa" with body:
     """
