@@ -38,12 +38,4 @@ abstract class AbstractRepository extends EntityRepository
 
         $this->_em->flush();
     }
-
-    public function countEntries()
-    {
-        return count(
-            $this->createQueryBuilder('a')
-                 ->getQuery()
-                ->getResult());
-    }
 }
