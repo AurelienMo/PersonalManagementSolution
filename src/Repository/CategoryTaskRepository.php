@@ -19,7 +19,7 @@ namespace App\Repository;
 class CategoryTaskRepository extends AbstractRepository
 {
     /**
-     * @param array $filter
+     * @param string $filter
      *
      * @return array
      */

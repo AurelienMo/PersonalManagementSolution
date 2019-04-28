@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace App\Domain\CategoryTask\ListCat;
 
 use App\Entity\CategoryTask;
+use App\Repository\CategoryTaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -44,8 +45,9 @@ class Loader
 
     public function load(ListCatInput $input): ?string
     {
-        $categories = $this->entityManager->getRepository(CategoryTask::class)
-                                          ->loadCat($input->getKeywords());
+        /** @var CategoryTaskRepository $repo */
+        $repo = $this->entityManager->getRepository(CategoryTask::class);
+        $categories = $repo->loadCat($input->getKeywords());
 
         if (empty($categories)) {
             return null;
