@@ -12,6 +12,7 @@ declare(strict_types=1);
  */
 
 use App\Entity\AbstractEntity;
+use App\Entity\CategoryTask;
 use App\Entity\Group;
 use App\Entity\User;
 use Behat\Behat\Context\Context;
@@ -281,4 +282,22 @@ class DoctrineContext implements Context
         }
         $this->getManager()->flush();
     }
+
+    /**
+     * @Given I load following task categories:
+     *
+     * @param TableNode $table
+     *
+     * @throws Exception
+     */
+    public function iLoadFollowingTaskCategories(TableNode $table)
+    {
+        foreach ($table->getHash() as $hash) {
+            $categoryTask = new CategoryTask($hash['name']);
+            $this->getManager()->persist($categoryTask);
+        }
+
+        $this->getManager()->flush();
+    }
+
 }

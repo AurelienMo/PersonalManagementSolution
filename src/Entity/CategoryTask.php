@@ -14,12 +14,13 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Class CategoryTask
  *
  * @ORM\Table(name="amo_category_task")
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="App\Repository\CategoryTaskRepository")
  */
 class CategoryTask extends AbstractEntity
 {
@@ -27,6 +28,8 @@ class CategoryTask extends AbstractEntity
      * @var string
      *
      * @ORM\Column(type="string")
+     *
+     * @Groups({"all"})
      */
     protected $name;
 
