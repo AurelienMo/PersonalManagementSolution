@@ -55,9 +55,9 @@ Feature: As an auth & owner group user I need to able to remove member from my g
     And user with username "test" should have following group name "Foob"
     And user with username "test" should have following role:
     | role              |
-    | 'ROLE_MEMBER'     |
-    | 'ROLE_ADMIN'      |
-    | 'ROLE_USER'       |
+    | ROLE_MEMBER     |
+    | ROLE_ADMIN      |
+    | ROLE_USER       |
     And user with username "barfoo" should have following id "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
     When After authentication on url "/api/login_check" with method "POST" as user "johndoe" with password "12345678", I send a "DELETE" request to "/api/groups/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/members/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa" with body:
     """
