@@ -73,6 +73,7 @@
         "behat/symfony2-extension": "^2.1",
         "behatch/contexts": "^3.2",
         "friendsofphp/php-cs-fixer": "^2.14",
+        "leanphp/behat-code-coverage": "^3.4",
         "phploc/phploc": "^5.0",
         "phpmd/phpmd": "^2.6",
         "phpmetrics/phpmetrics": "^2.4",
