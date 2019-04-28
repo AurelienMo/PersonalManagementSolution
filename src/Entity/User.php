@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Entity\AdditionnalInformationsEntities\UserStatus;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -88,6 +90,20 @@ class User extends AbstractEntity implements UserInterface
     protected $group;
 
     /**
+     * @var Task[]|Collection
+     *
+     * @ORM\OneToMany(targetEntity="Task", mappedBy="owner", cascade={"remove", "persist"})
+     */
+    protected $ownerTasks;
+
+    /**
+     * @var Task[]|Collection
+     *
+     * @ORM\OneToMany(targetEntity="Task", mappedBy="personAffected", cascade={"remove", "persist"})
+     */
+    protected $affectedTasks;
+
+    /**
      * User constructor.
      *
      * @param string $firstname
@@ -114,6 +130,8 @@ class User extends AbstractEntity implements UserInterface
         $this->password = $password;
         $this->roles[] = 'ROLE_USER';
         $this->status = $status;
+        $this->ownerTasks = new ArrayCollection();
+        $this->affectedTasks = new ArrayCollection();
         parent::__construct();
     }
 
@@ -210,5 +228,53 @@ class User extends AbstractEntity implements UserInterface
         } else {
             $this->roles[] = $role;
         }
+    }
+
+    /**
+     * @return Task[]|Collection
+     */
+    public function getOwnerTasks()
+    {
+        return $this->ownerTasks;
+    }
+
+    /**
+     * @return Task[]|Collection
+     */
+    public function getAffectedTasks()
+    {
+        return $this->affectedTasks;
+    }
+
+    /**
+     * @param Task $task
+     *
+     * @return $this
+     */
+    public function addNewRespTask(Task $task)
+    {
+        $this->ownerTasks->add($task);
+
+        return $this;
+    }
+
+    public function removeNewRespTask(Task $task)
+    {
+        $this->ownerTasks->removeElement($task);
+    }
+
+    public function addDoingTask(Task $task)
+    {
+        $this->affectedTasks->add($task);
+
+        return $this;
+    }
+
+    /**
+     * @param Task $task
+     */
+    public function removeDoingTask(Task $task)
+    {
+        $this->affectedTasks->add($task);
     }
 }
