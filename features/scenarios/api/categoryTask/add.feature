@@ -9,7 +9,7 @@ Feature: As an auth user, I need to be able to add task category
       | John      | Doe      | johndoe  | 12345678 | johndoe@yopmail.com | AZERTYTOKEN     | enabled |
 
   Scenario: [Fail] try with anonymous user
-    When I send a "POST" request to "/taskCategories" with body:
+    When I send a "POST" request to "/api/taskCategories" with body:
     """
     {
     }
@@ -48,3 +48,4 @@ Feature: As an auth user, I need to be able to add task category
     """
     Then the response status code should be 201
     And the response should be empty
+    And database should count "1" entry for entity "App\Entity\CategoryTask" into database

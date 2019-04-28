@@ -300,4 +300,20 @@ class DoctrineContext implements Context
         $this->getManager()->flush();
     }
 
+    /**
+     * @Then database should count :arg1 entry for entity :arg2 into database
+     */
+    public function databaseShouldCountEntryForEntityIntoDatabase($arg1, $arg2)
+    {
+        $resIntoDb = count($this->getManager()->getRepository($arg2)->findAll());
+        if ((int) $resIntoDb !== (int) $arg1) {
+            throw new Exception(
+                sprintf(
+                    'Not equal, %s expected, %s found into database',
+                    $arg1,
+                    $resIntoDb
+                )
+            );
+        }
+    }
 }
