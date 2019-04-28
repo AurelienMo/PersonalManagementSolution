@@ -69,6 +69,10 @@ tf: ## Run functional tests
 tf: vendor
 	vendor/bin/behat
 
+tf-coverage: ## Run functional tests with coverage
+tf-coverage: vendor
+	vendor/bin/behat --profile=coverage
+
 .PHONY: test tu tf
 
 # rules based on files

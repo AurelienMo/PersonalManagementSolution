@@ -22,6 +22,31 @@ default:
                     default:
                         symfony2: ~
         Behatch\Extension: ~
+
+coverage:
+    suites:
+        default:
+            contexts:
+                - FeatureContext
+                - DoctrineContext:
+                    doctrine: '@doctrine'
+                    kernel: '@kernel'
+                    encoderFactory: '@security.encoder_factory'
+                - CustomRestContext
+                - behatch:context:json
+                - MailContext:
+                    kernel: '@kernel'
+
+    extensions:
+        Behat\Symfony2Extension:
+            kernel:
+                bootstrap: features/bootstrap/bootstrap.php
+                class: App\Kernel
+        Behat\MinkExtension:
+                sessions:
+                    default:
+                        symfony2: ~
+        Behatch\Extension: ~
         LeanPHP\Behat\CodeCoverage\Extension:
           # select which driver to use when gatherig coverage data
           drivers:
@@ -51,3 +76,4 @@ default:
             format:    html
             options:
               target: var/behat-coverage/html
+
