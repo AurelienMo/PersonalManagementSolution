@@ -89,6 +89,7 @@ class Task extends AbstractEntity
      * @param string         $name
      * @param CategoryTask   $category
      * @param User           $owner
+     * @param bool           $displayInGroup
      * @param string         $status
      * @param \DateTime|null $startAt
      * @param \DateTime|null $dueAt
@@ -100,6 +101,7 @@ class Task extends AbstractEntity
         string $name,
         CategoryTask $category,
         User $owner,
+        bool $displayInGroup = false,
         string $status = TaskStatus::TODO,
         \DateTime $startAt = null,
         \DateTime $dueAt = null,
@@ -109,6 +111,7 @@ class Task extends AbstractEntity
         $this->category = $category;
         $this->status = $status;
         $this->owner = $owner;
+        $this->displayInGroup = $displayInGroup;
         $this->startAt = $startAt;
         $this->dueAt = $dueAt;
         $this->personAffected = $personAffected;

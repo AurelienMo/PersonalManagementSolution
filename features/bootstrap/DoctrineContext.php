@@ -14,6 +14,7 @@ declare(strict_types=1);
 use App\Entity\AbstractEntity;
 use App\Entity\CategoryTask;
 use App\Entity\Group;
+use App\Entity\Task;
 use App\Entity\User;
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
@@ -313,6 +314,86 @@ class DoctrineContext implements Context
                     $arg1,
                     $resIntoDb
                 )
+            );
+        }
+    }
+
+    /**
+     * @Then task with name :name should be exist and affect to :fullname
+     */
+    public function taskWithNameShouldBeExistAndAffectTo($name, $fullname)
+    {
+        $task = $this->getManager()->getRepository(Task::class)
+                                   ->findOneBy(
+                                       [
+                                           'name' => $name,
+                                       ]
+                                   );
+
+        /** @var User $userAffect */
+        $userAffect = $task->getPersonAffected();
+
+        if (is_null($userAffect)) {
+            throw new Exception('Task not affected');
+        }
+
+        $fullNameAffected = sprintf('%s %s', $userAffect->getFirstname(), $userAffect->getLastname());
+
+        if ($fullNameAffected !== $fullname) {
+            throw new Exception(
+                sprintf('%s expected, %s given', $fullNameAffected, $fullname)
+            );
+        }
+    }
+
+    /**
+     * @Then task with name :name should be exist and display in group
+     */
+    public function taskWithNameShouldBeExistAndDisplayInGroup($name)
+    {
+        $task = $this->getManager()->getRepository(Task::class)
+            ->findOneBy(
+                [
+                    'name' => $name,
+                ]
+            );
+
+        if (is_null($task)) {
+            throw new Exception('Task not exist');
+        }
+
+        if (!$task->isDisplayInGroup()) {
+            throw new Exception('Task should be display in group');
+        }
+    }
+
+    /**
+     * @Then task with name :arg1 should be exist, display in group and affect to :fullname
+     */
+    public function taskWithNameShouldBeExistDisplayInGroupAndAffectTo($name, $fullname)
+    {
+        $task = $this->getManager()->getRepository(Task::class)
+            ->findOneBy(
+                [
+                    'name' => $name,
+                ]
+            );
+
+        if (is_null($task)) {
+            throw new Exception('Task not exist');
+        }
+
+        if (!$task->isDisplayInGroup()) {
+            throw new Exception('Task should be display in group');
+        }
+
+        /** @var User $userAffect */
+        $userAffect = $task->getPersonAffected();
+        $fullNameAffected = sprintf('%s %s', $userAffect->getFirstname(), $userAffect->getLastname());
+
+        if ($fullNameAffected !== $fullname) {
+            throw new Exception(
+                sprintf('%s expected, %s given', $fullNameAffected, $fullname)
             );
         }
     }
