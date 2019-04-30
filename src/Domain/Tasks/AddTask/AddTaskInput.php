@@ -14,10 +14,15 @@ declare(strict_types=1);
 namespace App\Domain\Tasks\AddTask;
 
 use App\Domain\InputInterface;
+use App\Domain\Tasks\Constraints\DueDateLessThan;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class AddTaskInput
+ *
+ * @DueDateLessThan(
+ *     message="La date d'échéance ne peut pas être inférieur à la date de début."
+ * )
  */
 class AddTaskInput implements InputInterface
 {

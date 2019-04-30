@@ -13,9 +13,12 @@ declare(strict_types=1);
 
 namespace App\Actions\API\Tasks;
 
+use App\Domain\Common\Exceptions\ValidatorException;
 use App\Domain\Tasks\AddTask\Persister;
 use App\Domain\Tasks\AddTask\RequestResolver;
+use App\Responders\JsonResponder;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
@@ -45,8 +48,22 @@ class AddTask
         $this->persister = $persister;
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return Response
+     *
+     * @throws ValidatorException
+     */
     public function __invoke(Request $request)
     {
         $input = $this->requestResolver->resolve($request);
+        $output = $this->persister->save($input);
+
+        return JsonResponder::response(
+            $request,
+            $output,
+            201
+        );
     }
 }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Group;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -34,6 +35,32 @@ class UserRepository extends AbstractRepository implements UserLoaderInterface
         return $this->createQueryBuilder('u')
                     ->where('u.email = :identifier OR u.username = :identifier')
                     ->setParameter('identifier', $username)
+                    ->getQuery()
+                    ->getOneOrNullResult();
+    }
+
+    /**
+     * @param Group  $group
+     * @param string $fullname
+     *
+     * @return mixed
+     *
+     * @throws NonUniqueResultException
+     */
+    public function loadByFullNameInGroup(Group $group, string $fullname)
+    {
+        $fullNameExplode = explode(' ', $fullname);
+
+        return $this->createQueryBuilder('u')
+                    ->where('u.firstname = :firstname AND u.lastname = :lastname')
+                    ->andWhere('u.group = :group')
+                    ->setParameters(
+                        [
+                            'firstname' => str_replace(' ', '', $fullNameExplode[0]),
+                            'lastname' => str_replace(' ', '', $fullNameExplode[1]),
+                            'group' => $group
+                        ]
+                    )
                     ->getQuery()
                     ->getOneOrNullResult();
     }

@@ -365,6 +365,10 @@ class DoctrineContext implements Context
         if (!$task->isDisplayInGroup()) {
             throw new Exception('Task should be display in group');
         }
+
+        if (!\is_null($task->getPersonAffected())) {
+            throw new Exception('Task should be not affected');
+        }
     }
 
     /**

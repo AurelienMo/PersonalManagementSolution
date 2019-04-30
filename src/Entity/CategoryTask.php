@@ -29,7 +29,7 @@ class CategoryTask extends AbstractEntity
      *
      * @ORM\Column(type="string")
      *
-     * @Groups({"all"})
+     * @Groups({"all", "detail_task"})
      */
     protected $name;
 

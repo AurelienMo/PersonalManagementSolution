@@ -33,7 +33,7 @@ class User extends AbstractEntity implements UserInterface
      *
      * @ORM\Column(type="string")
      *
-     * @Groups({"group_detail_show"})
+     * @Groups({"group_detail_show", "detail_task"})
      */
     protected $firstname;
 
@@ -42,7 +42,7 @@ class User extends AbstractEntity implements UserInterface
      *
      * @ORM\Column(type="string")
      *
-     * @Groups({"group_detail_show"})
+     * @Groups({"group_detail_show", "detail_task"})
      */
     protected $lastname;
 

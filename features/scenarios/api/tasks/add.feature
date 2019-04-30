@@ -9,6 +9,9 @@ Feature: As an auth user, I need to be able to add task for me or my group
       | John      | Doe      | johndoe  | 12345678 | johndoe@yopmail.com | AZERTYTOKEN     | enabled            |
       | Jane      | Doe      | janedoe  | 12345678 | janedoe@yopmail.com | AZERTYTOKEN     | enabled            |
       | Foo       | Bar      | foobar   | 12345678 | foobar@yopmail.com  | AZERTYTOKEN     | enabled            |
+    And I load following group:
+      | name    | passwordToJoin | owner   |
+      | JohnDoe | 12345678       | johndoe |
     And user with username "johndoe" should have following role:
      | role       |
      | ROLE_OWNER |
@@ -59,8 +62,15 @@ Feature: As an auth user, I need to be able to add task for me or my group
       "affectTo": "John Doe"
     }
     """
-    Then the response status code should be 400
-    And the response should be equal to following file "api/tasks/assertionFiles/add_invalid_role_to_affect.json"
+    Then the response status code should be 403
+    And the JSON should be equal to:
+    """
+    {
+      "code": 403,
+      "message": "Vous ne pouvez pas affecter une tâche à un admin ou créateur du groupe."
+    }
+    """
+
   Scenario: [Success] Successful adding task for me
     When After authentication on url "/api/login_check" with method "POST" as user "johndoe" with password "12345678", I send a "POST" request to "/api/tasks" with body:
     """
@@ -70,7 +80,7 @@ Feature: As an auth user, I need to be able to add task for me or my group
     }
     """
     Then the response status code should be 201
-    And task with name "Vider et remplir le lave vaisselle" should be exist and affect to "johndoe"
+    And task with name "Vider et remplir le lave vaisselle" should be exist and affect to "John Doe"
 
   Scenario: [Success] Successful adding task for group & not affected
     When After authentication on url "/api/login_check" with method "POST" as user "johndoe" with password "12345678", I send a "POST" request to "/api/tasks" with body:
@@ -85,6 +95,8 @@ Feature: As an auth user, I need to be able to add task for me or my group
     And task with name "Vider et remplir le lave vaisselle" should be exist and display in group
 
   Scenario: [Success] Successful adding task for other person in my group
+    And user with username "johndoe" should have following group name "JohnDoe"
+    And user with username "janedoe" should have following group name "JohnDoe"
     When After authentication on url "/api/login_check" with method "POST" as user "johndoe" with password "12345678", I send a "POST" request to "/api/tasks" with body:
     """
     {
@@ -95,4 +107,4 @@ Feature: As an auth user, I need to be able to add task for me or my group
     }
     """
     Then the response status code should be 201
-    And task with name "Vider et remplir le lave vaisselle" should be exist, display in group and affect to "janedoe"
+    And task with name "Vider et remplir le lave vaisselle" should be exist, display in group and affect to "Jane Doe"

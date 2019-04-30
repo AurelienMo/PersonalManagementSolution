@@ -15,6 +15,7 @@ namespace App\Entity;
 
 use App\Entity\AdditionnalInformationsEntities\TaskStatus;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * Class Task
@@ -28,6 +29,8 @@ class Task extends AbstractEntity
      * @var string
      *
      * @ORM\Column(type="string")
+     *
+     * @Groups({"detail_task"})
      */
     protected $name;
 
@@ -36,6 +39,8 @@ class Task extends AbstractEntity
      *
      * @ORM\ManyToOne(targetEntity="CategoryTask")
      * @ORM\JoinColumn(name="amo_category_task_id", referencedColumnName="id")
+     *
+     * @Groups({"detail_task"})
      */
     protected $category;
 
@@ -43,6 +48,8 @@ class Task extends AbstractEntity
      * @var bool
      *
      * @ORM\Column(type="boolean")
+     *
+     * @Groups({"detail_task"})
      */
     protected $displayInGroup;
 
@@ -50,6 +57,8 @@ class Task extends AbstractEntity
      * @var \DateTime|null
      *
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @Groups({"detail_task"})
      */
     protected $startAt;
 
@@ -57,6 +66,8 @@ class Task extends AbstractEntity
      * @var \DateTime|null
      *
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @Groups({"detail_task"})
      */
     protected $dueAt;
 
@@ -64,6 +75,8 @@ class Task extends AbstractEntity
      * @var string
      *
      * @ORM\Column(type="string")
+     *
+     * @Groups({"detail_task"})
      */
     protected $status;
 
@@ -72,6 +85,8 @@ class Task extends AbstractEntity
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="ownerTasks")
      * @ORM\JoinColumn(name="amo_owner_id", referencedColumnName="id", onDelete="CASCADE")
+     *
+     * @Groups({"detail_task"})
      */
     protected $owner;
 
@@ -80,6 +95,8 @@ class Task extends AbstractEntity
      *
      * @ORM\ManyToOne(targetEntity="User", inversedBy="affectedTasks")
      * @ORM\JoinColumn(name="amo_person_affected_id", referencedColumnName="id",nullable=true, onDelete="CASCADE")
+     *
+     * @Groups({"detail_task"})
      */
     protected $personAffected;
 
@@ -102,10 +119,10 @@ class Task extends AbstractEntity
         CategoryTask $category,
         User $owner,
         bool $displayInGroup = false,
-        string $status = TaskStatus::TODO,
         \DateTime $startAt = null,
         \DateTime $dueAt = null,
-        ?User $personAffected = null
+        ?User $personAffected = null,
+        string $status = TaskStatus::TODO
     ) {
         $this->name = $name;
         $this->category = $category;

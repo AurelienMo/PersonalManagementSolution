@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\CategoryTask;
+use Doctrine\ORM\NonUniqueResultException;
+
 /**
  * Class CategoryTaskRepository
  */
@@ -23,7 +26,7 @@ class CategoryTaskRepository extends AbstractRepository
      *
      * @return array
      */
-    public function loadCat(?string $filter)
+    public function loadCat(?string $filter): array
     {
         $qb = $this->createQueryBuilder('ct');
         if (!\is_null($filter)) {
@@ -35,5 +38,21 @@ class CategoryTaskRepository extends AbstractRepository
         $query->useQueryCache(true);
 
         return $query->getResult();
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return CategoryTask|null
+     *
+     * @throws NonUniqueResultException
+     */
+    public function loadByName(string $name): ?CategoryTask
+    {
+        return $this->createQueryBuilder('ct')
+                    ->where('ct.name LIKE :name')
+                    ->setParameter('name', '%'.ucfirst($name))
+                    ->getQuery()
+                    ->getOneOrNullResult();
     }
 }
