@@ -19,6 +19,8 @@ use App\Domain\Common\Factory\TaskFactory;
 use App\Entity\CategoryTask;
 use App\Entity\Group;
 use App\Entity\User;
+use App\Repository\CategoryTaskRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -55,6 +57,14 @@ class Persister extends AbstractPersister
         );
     }
 
+    /**
+     * @param AddTaskInput $input
+     *
+     * @return string|null
+     *
+     * @throws NonUniqueResultException
+     * @throws \Exception
+     */
     public function save(AddTaskInput $input): ?string
     {
         /** @var User $currentUser */
@@ -81,10 +91,19 @@ class Persister extends AbstractPersister
         );
     }
 
+    /**
+     * @param string|null $name
+     *
+     * @return CategoryTask|null
+     *
+     * @throws NonUniqueResultException
+     * @throws \Exception
+     */
     private function getCategoryTask(?string $name)
     {
-        $category = $this->entityManager->getRepository(CategoryTask::class)
-                                        ->loadByName($name);
+        /** @var CategoryTaskRepository $repo */
+        $repo = $this->entityManager->getRepository(CategoryTask::class);
+        $category = $repo->loadByName($name);
 
         if (\is_null($category)) {
             $category = CategoryTaskFactory::create($name);
@@ -95,18 +114,21 @@ class Persister extends AbstractPersister
     }
 
     /**
-     * @param Group       $group
+     * @param User        $currentUser
      * @param string|null $getAffectTo
+     * @param bool        $displayInGroup
      *
-     * @return User
+     * @return User|mixed|null
      *
      * @throws NonUniqueResultException
      */
     private function getAffected(User $currentUser, ?string $getAffectTo, bool $displayInGroup)
     {
         if ($displayInGroup && !\is_null($getAffectTo)) {
-            return $this->entityManager->getRepository(User::class)
-                ->loadByFullNameInGroup($currentUser->getGroup(), $getAffectTo);
+            /** @var UserRepository $repo */
+            $repo = $this->entityManager->getRepository(User::class);
+
+            return $repo->loadByFullNameInGroup($currentUser->getGroup(), $getAffectTo);
         } else if (\is_null($getAffectTo) && !$displayInGroup) {
             return $currentUser;
         }

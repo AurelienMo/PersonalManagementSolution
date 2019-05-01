@@ -17,6 +17,7 @@ use App\Domain\Common\Exceptions\ValidatorException;
 use App\Domain\Tasks\AddTask\Persister;
 use App\Domain\Tasks\AddTask\RequestResolver;
 use App\Responders\JsonResponder;
+use Doctrine\ORM\NonUniqueResultException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -54,6 +55,7 @@ class AddTask
      * @return Response
      *
      * @throws ValidatorException
+     * @throws NonUniqueResultException
      */
     public function __invoke(Request $request)
     {

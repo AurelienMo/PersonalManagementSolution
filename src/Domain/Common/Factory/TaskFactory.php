@@ -23,13 +23,13 @@ use App\Entity\User;
 class TaskFactory
 {
     /**
-     * @param string       $name
-     * @param CategoryTask $categoryTask
-     * @param User         $owner
-     * @param bool         $displayInGroup
-     * @param string       $startAt
-     * @param string       $dueAt
-     * @param User         $personAffected
+     * @param string         $name
+     * @param CategoryTask   $categoryTask
+     * @param User           $owner
+     * @param bool           $displayInGroup
+     * @param \DateTime|null $startAt
+     * @param \DateTime|null $dueAt
+     * @param User|null      $personAffected
      *
      * @return Task
      * @throws \Exception

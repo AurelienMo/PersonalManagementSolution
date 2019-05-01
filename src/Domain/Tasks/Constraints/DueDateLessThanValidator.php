@@ -22,15 +22,21 @@ use Symfony\Component\Validator\ConstraintValidator;
  */
 class DueDateLessThanValidator extends ConstraintValidator
 {
+    /**
+     * @param mixed                      $value
+     * @param Constraint|DueDateLessThan $constraint
+     */
     public function validate(
         $value,
         Constraint $constraint
     ) {
+        /** @var DueDateLessThan $constr */
+        $constr = $constraint;
         /** @var AddTaskInput $object */
         $object = $value;
         if (!is_null($object->getStartDate()) && !is_null($object->getDueDate())) {
             if ($object->getDueDate() < $object->getStartDate()) {
-                $this->context->buildViolation($constraint->message)
+                $this->context->buildViolation($constr->message)
                               ->addViolation();
             }
         }
