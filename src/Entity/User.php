@@ -81,27 +81,6 @@ class User extends AbstractEntity implements UserInterface
      */
     protected $password;
 
-    /**
-     * @var Group|null
-     *
-     * @ORM\ManyToOne(targetEntity="Group", inversedBy="members")
-     * @ORM\JoinColumn(name="amo_group_id", referencedColumnName="id", nullable=true, onDelete="CASCADE")
-     */
-    protected $group;
-
-    /**
-     * @var Task[]|Collection
-     *
-     * @ORM\OneToMany(targetEntity="Task", mappedBy="owner", cascade={"remove", "persist"})
-     */
-    protected $ownerTasks;
-
-    /**
-     * @var Task[]|Collection
-     *
-     * @ORM\OneToMany(targetEntity="Task", mappedBy="personAffected", cascade={"remove", "persist"})
-     */
-    protected $affectedTasks;
 
     /**
      * User constructor.
@@ -130,8 +109,6 @@ class User extends AbstractEntity implements UserInterface
         $this->password = $password;
         $this->roles[] = 'ROLE_USER';
         $this->status = $status;
-        $this->ownerTasks = new ArrayCollection();
-        $this->affectedTasks = new ArrayCollection();
         parent::__construct();
     }
 
@@ -202,22 +179,6 @@ class User extends AbstractEntity implements UserInterface
     }
 
     /**
-     * @return Group|null
-     */
-    public function getGroup(): ?Group
-    {
-        return $this->group;
-    }
-
-    /**
-     * @param Group $group
-     */
-    public function defineGroup(?Group $group)
-    {
-        $this->group = $group;
-    }
-
-    /**
      * @param string $role
      * @param bool   $remove
      */
@@ -228,53 +189,5 @@ class User extends AbstractEntity implements UserInterface
         } else {
             $this->roles[] = $role;
         }
-    }
-
-    /**
-     * @return Task[]|Collection
-     */
-    public function getOwnerTasks()
-    {
-        return $this->ownerTasks;
-    }
-
-    /**
-     * @return Task[]|Collection
-     */
-    public function getAffectedTasks()
-    {
-        return $this->affectedTasks;
-    }
-
-    /**
-     * @param Task $task
-     *
-     * @return $this
-     */
-    public function addNewRespTask(Task $task)
-    {
-        $this->ownerTasks->add($task);
-
-        return $this;
-    }
-
-    public function removeNewRespTask(Task $task)
-    {
-        $this->ownerTasks->removeElement($task);
-    }
-
-    public function addDoingTask(Task $task)
-    {
-        $this->affectedTasks->add($task);
-
-        return $this;
-    }
-
-    /**
-     * @param Task $task
-     */
-    public function removeDoingTask(Task $task)
-    {
-        $this->affectedTasks->add($task);
     }
 }

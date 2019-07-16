@@ -212,7 +212,10 @@ class DoctrineContext implements Context
             );
             $this->getManager()->persist($group);
             $user->defineGroup($group);
+            dump($user);
+            dump($group);
         }
+        exit;
 
         $this->getManager()->flush();
     }
@@ -401,4 +404,18 @@ class DoctrineContext implements Context
             );
         }
     }
+
+    /**
+     * @Then user :username should have role :role
+     */
+    public function userShouldHaveRole($username, $role)
+    {
+        $user = $this->getManager()->getRepository(User::class)
+                                   ->loadUserByUsername($username);
+
+        if (!in_array($role, $user->getRoles())) {
+            throw new Exception(sprintf('User %s should have %s role', $username, $role));
+        }
+    }
+
 }
