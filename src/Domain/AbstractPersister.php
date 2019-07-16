@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace App\Domain;
 
-use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -23,9 +21,6 @@ use Symfony\Component\Serializer\SerializerInterface;
  */
 abstract class AbstractPersister
 {
-    /** @var EntityManagerInterface */
-    protected $entityManager;
-
     /** @var EventDispatcherInterface */
     protected $eventDispatcher;
 
@@ -35,27 +30,14 @@ abstract class AbstractPersister
     /**
      * AbstractPersister constructor.
      *
-     * @param EntityManagerInterface   $entityManager
      * @param EventDispatcherInterface $eventDispatcher
      * @param SerializerInterface      $serializer
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
         EventDispatcherInterface $eventDispatcher,
         SerializerInterface $serializer
     ) {
-        $this->entityManager = $entityManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->serializer = $serializer;
-    }
-
-    /**
-     * @param string $className
-     *
-     * @return ObjectRepository
-     */
-    protected function getRepository(string $className)
-    {
-        return $this->entityManager->getRepository($className);
     }
 }

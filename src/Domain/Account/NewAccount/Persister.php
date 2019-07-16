@@ -32,23 +32,26 @@ class Persister extends AbstractPersister
     /** @var EncoderFactoryInterface */
     protected $encoder;
 
+    /** @var UserRepository */
+    protected $userRepo;
+
     /**
      * Persister constructor.
      *
-     * @param EntityManagerInterface   $entityManager
      * @param EventDispatcherInterface $eventDispatcher
      * @param SerializerInterface      $serializer
      * @param EncoderFactoryInterface  $encoder
+     * @param UserRepository           $userRepo
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
         EventDispatcherInterface $eventDispatcher,
         SerializerInterface $serializer,
-        EncoderFactoryInterface $encoder
+        EncoderFactoryInterface $encoder,
+        UserRepository $userRepo
     ) {
         $this->encoder = $encoder;
+        $this->userRepo = $userRepo;
         parent::__construct(
-            $entityManager,
             $eventDispatcher,
             $serializer
         );
@@ -71,9 +74,7 @@ class Persister extends AbstractPersister
             $encoder->encodePassword($input->getPassword(), ''),
             $input->getEmail()
         );
-        /** @var UserRepository $repo */
-        $repo = $this->getRepository(User::class);
-        $repo->persistSave($user, true);
+        $this->userRepo->persistSave($user, true);
 
         $this->eventDispatcher->dispatch(
             MailSubscriptionEvent::USER_SUBSCRIPTION_MAIL,

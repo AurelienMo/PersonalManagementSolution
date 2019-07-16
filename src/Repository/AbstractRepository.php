@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\AbstractEntity;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
@@ -21,8 +23,17 @@ use Doctrine\ORM\ORMException;
 /**
  * Class AbstractRepository.
  */
-abstract class AbstractRepository extends EntityRepository
+abstract class AbstractRepository extends ServiceEntityRepository
 {
+    public function __construct(
+        ManagerRegistry $registry
+    ) {
+        parent::__construct(
+            $registry,
+            $this->getClass()
+        );
+    }
+
     /**
      * @param AbstractEntity|null $entity
      * @param bool                $isNew
@@ -38,4 +49,6 @@ abstract class AbstractRepository extends EntityRepository
 
         $this->_em->flush();
     }
+
+    abstract protected function getClass(): string;
 }
